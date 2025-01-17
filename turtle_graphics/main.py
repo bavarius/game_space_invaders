@@ -19,7 +19,7 @@ screen.bgcolor('black')
 screen.tracer(0, 0)
 scoreboard = Scoreboard(NUM_LIVES, screen)
 ship = Ship(0, Y_MOVING_BASE, NUM_LIVES, screen)
-aliens = Aliens()
+aliens = Aliens(width=SCREEN_WIDTH)
 shots = Shots()
 
 
@@ -37,10 +37,10 @@ def draw_line(color):
 
 
 def shoot():
-    shots.shoot(pos=ship.get_position())
+    shots.shoot_from_ship(pos=ship.get_position())
 
 
-# reacting upon keys
+# control the ship movement and shooting with keys
 screen.listen()
 screen.onkeypress(key='Left', fun=ship.move_left)
 screen.onkeypress(key='Right', fun=ship.move_right)
@@ -56,14 +56,16 @@ def main():
 
         if last - start > DISPLAY_DELAY:
             aliens.move()
-            ship_position = ship.get_position()
-            if aliens.detect_collision_with_ship(ship_position) or shots.detect_collision_with_ship(ship_position):
-                if scoreboard.decrease_lives():
-                    scoreboard.store_highscore()
+            shots.shoot_from_alien(aliens.get_random_alien_position())
+            if aliens.mystery_state != MysteryState.HIDDEN:
+                shots.shoot_from_mystery(aliens.get_mystery_position())
+            shots.move()
+            scoreboard.increase_score(
+                aliens.detect_hit_by_shot_and_get_points(shots))
+            if aliens.detect_collision_with_ship_or_bottomline(pos=ship.get_position()) or shots.detect_collision_with_ship(pos=ship.get_position()):
+                if scoreboard.decrease_lives_and_check_if_game_over(ship):
                     game_is_on = False
                 else:  # game ongoing
-                    ship.redraw_ships_left(
-                        scoreboard.get_current_num_lives() - 1)
                     shots.reset()
                     aliens.reset()
                     time.sleep(2)
@@ -71,16 +73,6 @@ def main():
                 shots.reset()
                 aliens.reset()
 
-            shots.shoot_from_alien(aliens.get_random_alien_position())
-            if aliens.mystery_state != MysteryState.HIDDEN:
-                shots.shoot_from_mystery(aliens.get_mystery_position())
-            shots.move()
-            shots_from_ship = shots.get_ship_shot_buffer()
-            for shot in shots_from_ship:
-                points = aliens.detect_collision_with_shot(shot)
-                if points > 0:  # If the returned points are greater than 0, an alien was hit by a shot from the ship.
-                    scoreboard.increase_score(points)
-                    shot.hideturtle()
             shots.housekeeping(SCREEN_HEIGHT)
             start = time.time()
 
