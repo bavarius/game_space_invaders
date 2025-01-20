@@ -16,6 +16,7 @@ SCREEN_HEIGHT = 800
 FONT = pygame.font.SysFont('couriernew', 24)
 FONT_GAME_OVER = pygame.font.SysFont('couriernew', 48)
 NUM_LIVES = 4
+FRAME_RATE = 120  # Frames per second
 
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("My Space Invaders")
@@ -71,7 +72,7 @@ def main():
             aliens.reset()
 
         shots.housekeeping()
-        clock.tick(120)  # limit to n frames per second
+        clock.tick(FRAME_RATE)
         pygame.display.update()
 
     pygame.event.pump()

@@ -216,15 +216,15 @@ class Aliens():
     def control_speed(self):
         """Control the speed of the aliens."""
         if self.num_aliens_on_screen == 1:
-            self.speed = MAX_SPEED
+            self.speed = MAX_SPEED + self.stage_number / 10
         elif self.num_aliens_on_screen == 3:
-            self.speed = MAX_SPEED - 0.2
+            self.speed = MAX_SPEED + self.stage_number / 10 - 0.2
         elif self.num_aliens_on_screen == 5:
-            self.speed = MAX_SPEED - 0.4
-        elif self.num_aliens_on_screen == 10:
-            self.speed = MAX_SPEED - 0.7
-        elif self.num_aliens_on_screen >= 15:
-            self.speed = MAX_SPEED - 1
+            self.speed = MAX_SPEED + self.stage_number / 10 - 0.4
+        elif self.num_aliens_on_screen == 12:
+            self.speed = MAX_SPEED + self.stage_number / 10 - 0.7
+        elif self.num_aliens_on_screen >= 25:
+            self.speed = MAX_SPEED + self.stage_number / 10 - 1
 
     def get_num_on_screen(self):
         """Return the number of aliens on the screen."""

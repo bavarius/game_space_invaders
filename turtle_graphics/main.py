@@ -10,7 +10,8 @@ SCREEN_HEIGHT = 800
 Y_FLOOR = -350
 Y_MOVING_BASE = Y_FLOOR + 20  # The ship's bottom line
 NUM_LIVES = 4
-DISPLAY_DELAY = 0.1  # seconds
+FRAME_RATE = 120  # Frames per second
+TIME_FOR_1_FRAME = 1 / FRAME_RATE  # Seconds
 
 screen = Screen()
 screen.setup(width=SCREEN_WIDTH, height=SCREEN_HEIGHT)
@@ -49,33 +50,34 @@ screen.onkeypress(key='space', fun=shoot)
 
 def main():
     draw_line('yellow')
-    start = time.time()
+
     game_is_on = True
     while game_is_on:
-        last = time.time()
+        timer_this_frame = time.time()
 
-        if last - start > DISPLAY_DELAY:
-            aliens.move()
-            shots.shoot_from_alien(aliens.get_random_alien_position())
-            if aliens.mystery_state != MysteryState.HIDDEN:
-                shots.shoot_from_mystery(aliens.get_mystery_position())
-            shots.move()
-            scoreboard.increase_score(
-                aliens.detect_hit_by_shot_and_get_points(shots))
-            if aliens.detect_collision_with_ship_or_bottomline(pos=ship.get_position()) or shots.detect_collision_with_ship(pos=ship.get_position()):
-                if scoreboard.decrease_lives_and_check_if_game_over(ship):
-                    game_is_on = False
-                else:  # game ongoing
-                    shots.reset()
-                    aliens.reset()
-                    time.sleep(2)
-            if aliens.get_num_on_screen() <= 0:  # All aliens are destroyed.
+        aliens.move()
+        shots.shoot_from_alien(aliens.get_random_alien_position())
+        if aliens.mystery_state != MysteryState.HIDDEN:
+            shots.shoot_from_mystery(aliens.get_mystery_position())
+        shots.move()
+        scoreboard.increase_score(
+            aliens.detect_hit_by_shot_and_get_points(shots))
+        if aliens.detect_collision_with_ship_or_bottomline(pos=ship.get_position()) or shots.detect_collision_with_ship(pos=ship.get_position()):
+            if scoreboard.decrease_lives_and_check_if_game_over(ship):
+                game_is_on = False
+            else:  # game ongoing
                 shots.reset()
                 aliens.reset()
+                time.sleep(2)
+        if aliens.get_num_on_screen() <= 0:  # All aliens are destroyed.
+            shots.reset()
+            aliens.reset()
 
-            shots.housekeeping(SCREEN_HEIGHT)
-            start = time.time()
+        shots.housekeeping(SCREEN_HEIGHT)
 
+        time_for_this_frame = time.time() - timer_this_frame
+        if time_for_this_frame < TIME_FOR_1_FRAME:
+            time.sleep(TIME_FOR_1_FRAME - time_for_this_frame)
         screen.update()
 
     screen.exitonclick()
