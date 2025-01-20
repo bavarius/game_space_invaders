@@ -44,7 +44,9 @@ class Scoreboard(Turtle):
     def game_over(self):
         """Display the game over text on the screen."""
         self.home()
+        self.color('yellow')
         self.write("Game over!", align='center', font=FONT2)
+        self.store_highscore()
 
     def decrease_lives_and_check_if_game_over(self, ship) -> bool:
         """Decrease the number of lives and check if the game is over."""

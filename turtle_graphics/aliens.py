@@ -13,10 +13,10 @@ TO_RIGHT = 0
 TO_LEFT = 180
 VERTICAL_SPACE = 45
 HORIZONTAL_SPACE = 45
-INITIAL_SPEED = 1
-MAX_SPEED = 40
-MYSTERY_SPEED = 15
-MYSTERY_APPEARANCE_PROBABILITY = 100
+INITIAL_SPEED = 0.5
+MAX_SPEED = 5
+MYSTERY_SPEED = 3
+MYSTERY_APPEARANCE_PROBABILITY = 1000
 MYSTERY_POINTS = [100, 200, 500, 750, 1000]
 DISTANCE_SHOT_COLLISION = 30.0
 DISTANCE_SHIP_COLLISION = 25.0
@@ -146,6 +146,7 @@ class Aliens(Turtle):
                             if self.mystery.distance(shot) < DISTANCE_SHOT_COLLISION:
                                 shot.sety(410)  # move shot out of sight
                                 shot.hideturtle()  # hide shot
+                                self.mystery.hideturtle()
                                 self.mystery_state = MysteryState.HIDDEN
                                 return choice(MYSTERY_POINTS)
 
@@ -212,15 +213,15 @@ class Aliens(Turtle):
     def control_speed(self):
         """Control the speed of the aliens."""
         if self.num_aliens_on_screen == 1:
-            self.speed = MAX_SPEED
+            self.speed = MAX_SPEED + self.stage_number
         elif self.num_aliens_on_screen == 3:
-            self.speed = MAX_SPEED - 2
+            self.speed = MAX_SPEED + self.stage_number - 0.625
         elif self.num_aliens_on_screen == 5:
-            self.speed = MAX_SPEED - 4
-        elif self.num_aliens_on_screen == 10:
-            self.speed = MAX_SPEED - 7
-        elif self.num_aliens_on_screen >= 15:
-            self.speed = MAX_SPEED - 20
+            self.speed = MAX_SPEED + self.stage_number - 1.25
+        elif self.num_aliens_on_screen == 12:
+            self.speed = MAX_SPEED + self.stage_number - 2.5
+        elif self.num_aliens_on_screen >= 25:
+            self.speed = MAX_SPEED + self.stage_number - 4
 
     def get_num_on_screen(self):
         """Return the number of aliens on the screen."""

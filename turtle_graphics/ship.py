@@ -1,6 +1,6 @@
 from turtle import Turtle, register_shape
 
-STEP_WIDTH = 12
+STEP_WIDTH = 14
 SHIP_GIF = 'resources/ship.gif'
 register_shape(SHIP_GIF)
 

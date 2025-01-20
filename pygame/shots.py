@@ -3,12 +3,14 @@ from distance import get_distance
 import time
 
 NUM_MAX_SHOTS_SHIP = 7  # shots on screen at a time
-NUM_MAX_SHOTS_ALIENS = 20  # alien shots on screen at a time
-NUM_MAX_SHOTS_MYSTERY = 20  # mystery shots on screen at a time
+NUM_MAX_SHOTS_ALIENS = 10  # alien shots on screen at a time
+NUM_MAX_SHOTS_MYSTERY = 18  # mystery shots on screen at a time
 HEADING_NORTH = 90
 HEADING_SOUTH = 270
-SHIP_SHOT_SPEED = 5
-ALIEN_SHOT_SPEED = 2.5
+SHIP_SHOT_SPEED = 3.0
+ALIEN_SHOT_SPEED = 1.0
+ALIEN_SHOT_INTERVAL = 0.5
+MYSTERY_SHOT_INTERVAL = 0.6
 SHOT_INIT_POS_X = -20
 SHOT_INIT_POS_Y = -20
 SHOT_WIDTH = 2
@@ -97,7 +99,7 @@ class Shots():
             pos (tuple): A tuple containing the x and y coordinates where the shot should be fired from.
         """
         interval = time.time() - self.time
-        if interval > 0.5:
+        if interval > ALIEN_SHOT_INTERVAL:
             self.time = time.time()
             i = self.find_free_shot_alien()
             if i < NUM_MAX_SHOTS_ALIENS:
@@ -115,7 +117,7 @@ class Shots():
             pos (tuple): A tuple containing the x and y coordinates where the shot should be teleported.
         """
         interval = time.time() - self.time_mystery_shots
-        if interval > 0.4:
+        if interval > MYSTERY_SHOT_INTERVAL:
             self.time_mystery_shots = time.time()
             i = self.find_free_shot_mystery()
             if i < NUM_MAX_SHOTS_MYSTERY:
@@ -146,10 +148,10 @@ class Shots():
     def detect_collision_with_ship(self, pos):
         """Check if a shot has hit the ship."""
         for shot in self.alien_shot_buffer:
-            if shot != None and get_distance(pos[0], pos[1], shot.x, shot.y) < DISTANCE_SHIP_COLLISION:
+            if shot != None and get_distance(pos[0], pos[1], shot.x, shot.bottom) < DISTANCE_SHIP_COLLISION:
                 return True
         for shot in self.mystery_shot_buffer:
-            if shot != None and get_distance(pos[0], pos[1], shot.x, shot.y) < DISTANCE_SHIP_COLLISION:
+            if shot != None and get_distance(pos[0], pos[1], shot.x, shot.bottom) < DISTANCE_SHIP_COLLISION:
                 return True
 
         return False

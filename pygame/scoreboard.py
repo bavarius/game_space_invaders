@@ -40,7 +40,8 @@ class Scoreboard():
         """Display the game over text on the screen."""
         screen = pygame.display.get_surface()
         game_over_text = self.font_game_over.render("GAME OVER!",
-                                                    True, (255, 255, 255))
+                                                    # yellow
+                                                    True, (255, 255, 0))
         screen.blit(game_over_text, game_over_text.get_rect(
             center=screen.get_rect().center))
         self.store_highscore()
