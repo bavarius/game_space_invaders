@@ -7,11 +7,10 @@ import time
 
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 800
+X_MOVE_DISTANCE = 8
 Y_FLOOR = -350
 Y_MOVING_BASE = Y_FLOOR + 20  # The ship's bottom line
 NUM_LIVES = 4
-FRAME_RATE = 120  # Frames per second
-TIME_FOR_1_FRAME = 1 / FRAME_RATE  # Seconds
 
 screen = Screen()
 screen.setup(width=SCREEN_WIDTH, height=SCREEN_HEIGHT)
@@ -37,14 +36,25 @@ def draw_line(color):
     line.goto((SCREEN_WIDTH / 2 + 10, Y_FLOOR))
 
 
+def move_ship_left():
+    """Move the ship to the left."""
+    ship.control(-X_MOVE_DISTANCE)
+
+
+def move_ship_right():
+    """Move the ship to the right."""
+    ship.control(X_MOVE_DISTANCE)
+
+
 def shoot():
+    """Shoot a bullet from the ship's position."""
     shots.shoot_from_ship(pos=ship.get_position())
 
 
 # control the ship movement and shooting with keys
 screen.listen()
-screen.onkeypress(key='Left', fun=ship.move_left)
-screen.onkeypress(key='Right', fun=ship.move_right)
+screen.onkeypress(key='Left', fun=move_ship_left)
+screen.onkeypress(key='Right', fun=move_ship_right)
 screen.onkeypress(key='space', fun=shoot)
 
 
@@ -53,8 +63,6 @@ def main():
 
     game_is_on = True
     while game_is_on:
-        timer_this_frame = time.time()
-
         aliens.move()
         shots.shoot_from_alien(aliens.get_random_alien_position())
         if aliens.mystery_state != MysteryState.HIDDEN:
@@ -72,12 +80,9 @@ def main():
         if aliens.get_num_on_screen() <= 0:  # All aliens are destroyed.
             shots.reset()
             aliens.reset()
-
         shots.housekeeping(SCREEN_HEIGHT)
 
-        time_for_this_frame = time.time() - timer_this_frame
-        if time_for_this_frame < TIME_FOR_1_FRAME:
-            time.sleep(TIME_FOR_1_FRAME - time_for_this_frame)
+        screen.tracer(0, 2)
         screen.update()
 
     screen.exitonclick()

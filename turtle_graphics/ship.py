@@ -1,8 +1,8 @@
 from turtle import Turtle, register_shape
 
-STEP_WIDTH = 14
 SHIP_GIF = 'resources/ship.gif'
 register_shape(SHIP_GIF)
+SHIP_WIDTH = 38  # width of the gif-file
 
 
 class Ship(Turtle):
@@ -11,6 +11,7 @@ class Ship(Turtle):
         super().__init__(visible=False)
         self.ship = Turtle(SHIP_GIF, visible=False)
         self.ship.penup()
+        self.x_pos = x
         self.ship.teleport(x, y)
         self.ship.setheading(90)  # north
         self.ship.speed('fastest')
@@ -36,17 +37,16 @@ class Ship(Turtle):
         self.num_ships_left -= 1
         self.ships_left[self.num_ships_left].hideturtle()
 
-    def move_left(self):
-        """move ship left"""
-        self.ship.setheading(180)  # west
-        if self.ship.xcor() > self.window_width / -2:
-            self.ship.forward(STEP_WIDTH)
+    def control(self, delta_x):
+        """Control the ship's movement."""
+        if delta_x != 0:
+            self.x_pos += delta_x
+            if self.x_pos < self.window_width / -2 + SHIP_WIDTH / 2 + 1:
+                self.x_pos = self.window_width / -2 + SHIP_WIDTH / 2 + 1
+            elif self.x_pos > self.window_width / 2 - SHIP_WIDTH / 2 - 8:
+                self.x_pos = self.window_width / 2 - SHIP_WIDTH / 2 - 8
 
-    def move_right(self):
-        """move ship right"""
-        self.ship.setheading(0)  # east
-        if self.ship.xcor() < self.window_width / 2:
-            self.ship.forward(STEP_WIDTH)
+        self.ship.setx(self.x_pos)
 
     def get_position(self):
         """Return the ship's position."""

@@ -35,8 +35,8 @@ class Ship():
         pygame.draw.line(self.screen, color, (0, self.bottom_line),
                          (self.screen.get_width(), self.bottom_line), 2)
 
-    def control_ship(self, delta_x):
-        """control the ship's movement"""
+    def control(self, delta_x):
+        """Control the ship's movement."""
         if delta_x != 0:
             self.x_pos += delta_x
             if self.x_pos < 0:
