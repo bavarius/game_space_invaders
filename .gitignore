@@ -169,3 +169,12 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+# needless file
+resources/Thumbs.db
+
+# file is dynamically created
+highestScore.txt
+
+# backup files
+*.bak

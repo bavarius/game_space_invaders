@@ -53,8 +53,10 @@ For collision detection it has to be iterated through all shots (from ship, from
 Turtle graphics gives the developer a good start in graphics programming. It's impressing what You can do with this bundle (see <a href="https://docs.python.org/3/library/turtle.html#module-turtledemo">turtledemo</a>)!</br>
 However every graphics object on screen must be a turtle object which by default draws a turtle on screen and leaves a line when it is moved.
 This causes an overhead - also in additional code lines! On the other hand Turtle graphics offers e.g. the built-in method distance(), which is useful for detection of a collision.</br>
-The pygame solution uses graphical methods which are also used by professionals.
+The pygame solution uses graphical methods which are also used by professionals.</br>
+The Turtle implementation has the disadvantage of a long response time upon a continuously pressed left/right key for ship control. This is because the system key delay is taken here. Pygame uses an internal timer to get a better key-handling for gaming.</br>
 Simple objects like e.g. a line only require one line of code. Diving into each graphics bundle requires some time.</br>
+During development it could be observed that using Turtle the programmer has to take care that graphic objects that are displayed with the creation of a turtle object disappear from screen while in pygame one has to achieve that an element is displayed at all (probably typical beginner faults!).</br>
 **Should You plan to develop several games using python, pygame might be the better choice for You!**
 
 ## Sources

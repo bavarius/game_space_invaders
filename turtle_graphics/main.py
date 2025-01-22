@@ -1,4 +1,4 @@
-from turtle import Screen, Turtle
+from turtle import Screen
 from aliens import Aliens, MysteryState
 from scoreboard import Scoreboard
 from ship import Ship
@@ -8,32 +8,17 @@ import time
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 800
 X_MOVE_DISTANCE = 8
-Y_FLOOR = -350
-Y_MOVING_BASE = Y_FLOOR + 20  # The ship's bottom line
 NUM_LIVES = 4
 
 screen = Screen()
 screen.setup(width=SCREEN_WIDTH, height=SCREEN_HEIGHT)
 screen.title("My Space Invaders")
 screen.bgcolor('black')
-screen.tracer(0, 0)
+screen.tracer(0, 2)
 scoreboard = Scoreboard(NUM_LIVES, screen)
-ship = Ship(0, Y_MOVING_BASE, NUM_LIVES, screen)
+ship = Ship(0, NUM_LIVES, screen)
 aliens = Aliens(width=SCREEN_WIDTH)
 shots = Shots()
-
-
-def draw_line(color):
-    line = Turtle(shape='classic', visible=False)
-    line.penup()
-    line.color(color)
-    line.pensize(2)
-    line.teleport(x=SCREEN_WIDTH / -2, y=Y_FLOOR)
-    line.setheading(0)
-    line.pendown()
-    line.speed('fastest')
-    line.showturtle()
-    line.goto((SCREEN_WIDTH / 2 + 10, Y_FLOOR))
 
 
 def move_ship_left():
@@ -59,7 +44,7 @@ screen.onkeypress(key='space', fun=shoot)
 
 
 def main():
-    draw_line('yellow')
+    ship.draw_line('yellow')
 
     game_is_on = True
     while game_is_on:
@@ -82,7 +67,6 @@ def main():
             aliens.reset()
         shots.housekeeping(SCREEN_HEIGHT)
 
-        screen.tracer(0, 2)
         screen.update()
 
     screen.exitonclick()

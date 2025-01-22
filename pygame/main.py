@@ -52,14 +52,13 @@ def main():
                 ship_delta_x = 0
 
         aliens.move()
-        ship.control_ship(ship_delta_x)
+        ship.control(ship_delta_x)
         shots.shoot_from_alien(aliens.get_random_alien_position())
         if aliens.get_mystery_state() != MysteryState.HIDDEN:
             shots.shoot_from_mystery(aliens.get_mystery_position())
         shots.move()
         scoreboard.increase_score(
             aliens.detect_hit_by_shot_and_get_points(shots))
-        scoreboard.update_score()
         if aliens.detect_collision_with_ship_or_bottomline(pos=ship.get_position()) or shots.detect_collision_with_ship(pos=ship.get_position()):
             if scoreboard.decrease_lives_and_check_if_game_over(ship):
                 game_is_on = False
@@ -70,8 +69,8 @@ def main():
         if aliens.get_num_on_screen() <= 0:  # All aliens are destroyed.
             shots.reset()
             aliens.reset()
-
         shots.housekeeping()
+
         clock.tick(FRAME_RATE)
         pygame.display.update()
 
