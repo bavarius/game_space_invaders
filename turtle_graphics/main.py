@@ -21,16 +21,6 @@ aliens = Aliens(width=SCREEN_WIDTH)
 shots = Shots()
 
 
-def move_ship_left():
-    """Move the ship to the left."""
-    ship.control(-X_MOVE_DISTANCE)
-
-
-def move_ship_right():
-    """Move the ship to the right."""
-    ship.control(X_MOVE_DISTANCE)
-
-
 def shoot():
     """Shoot a bullet from the ship's position."""
     shots.shoot_from_ship(pos=ship.get_position())
@@ -38,19 +28,20 @@ def shoot():
 
 # control the ship movement and shooting with keys
 screen.listen()
-screen.onkeypress(key='Left', fun=move_ship_left)
-screen.onkeypress(key='Right', fun=move_ship_right)
+screen.onkeypress(lambda delta=-X_MOVE_DISTANCE: ship.control(delta), 'Left')
+screen.onkeypress(lambda delta=X_MOVE_DISTANCE: ship.control(delta), 'Right')
 screen.onkeypress(key='space', fun=shoot)
 
 
 def main():
+    global ship_delta_x
     ship.draw_line('yellow')
 
     game_is_on = True
     while game_is_on:
         aliens.move()
         shots.shoot_from_alien(aliens.get_random_alien_position())
-        if aliens.mystery_state != MysteryState.HIDDEN:
+        if aliens.get_mystery_state != MysteryState.HIDDEN:
             shots.shoot_from_mystery(aliens.get_mystery_position())
         shots.move()
         scoreboard.increase_score(
